@@ -78,7 +78,11 @@ SMODS.Enhancement{
             elseif card.base.suit == "Diamonds" then
                 card.children.center:set_sprite_pos({x = 5, y = 5})
             elseif card.base.suit == "Spades" then
-                card.children.center:set_sprite_pos({x = 6, y = 5})
+                if G.SETTINGS.CUSTOM_DECK.Collabs.Spades == "reverse_ourple" then
+                    card.children.center:set_sprite_pos({x = 6, y = 7})
+                else
+                    card.children.center:set_sprite_pos({x = 6, y = 5})
+                end
             end
         end
     end,
@@ -92,7 +96,11 @@ SMODS.Enhancement{
             elseif card.base.suit == "Diamonds" then
                 card.children.center:set_sprite_pos({x = 5, y = 5})
             elseif card.base.suit == "Spades" then
-                card.children.center:set_sprite_pos({x = 6, y = 5})
+                if G.SETTINGS.CUSTOM_DECK.Collabs.Spades == "reverse_ourple" then
+                    card.children.center:set_sprite_pos({x = 6, y = 7})
+                else
+                    card.children.center:set_sprite_pos({x = 6, y = 5})
+                end
             end
         end
     end
@@ -330,5 +338,57 @@ SMODS.Enhancement{
             "This card also counts",
             "as a {C:spades}Spade"
         }
-    }
+    },
+    set_sprites = function(self, card, front)
+        if card.base then
+            card.children.center.atlas = G.ASSET_ATLAS['reverse_New_Enhance']
+            if G.SETTINGS.CUSTOM_DECK.Collabs.Spades == "reverse_ourple" then
+                card.children.center:set_sprite_pos({x = 5, y = 7})
+            else
+                card.children.center:set_sprite_pos({x = 6, y = 6})
+            end
+        end
+    end,
+    update = function(self, card, dt)
+        if card.base then
+            card.children.center.atlas = G.ASSET_ATLAS['reverse_New_Enhance']
+            if G.SETTINGS.CUSTOM_DECK.Collabs.Spades == "reverse_ourple" then
+                card.children.center:set_sprite_pos({x = 5, y = 7})
+            else
+                card.children.center:set_sprite_pos({x = 6, y = 6})
+            end
+        end
+    end
+}
+
+SMODS.Enhancement{
+    key = "iridium",
+    atlas = "New_Enhance",
+    pos = {x = 1, y = 7},
+    loc_txt={
+        name="Iridium Card",
+        text = {
+            "{X:mult,C:white}X#1#{} Mult, {X:chips,C:white}X#2#{} Chips",
+            "no rank or suit",
+            "cannot be selected"
+        }
+    },
+    config = {
+        extra = {
+            mult = 1.5,
+            chips = 1.5
+        }
+    },
+    replace_base_card = true,
+    no_rank = true,
+    no_suit = true,
+    always_scores = false,
+    loc_vars = function(self, info_queue, center)
+        return {vars = {center.ability.extra.mult, center.ability.extra.chips}}
+    end,
+    calculate = function(self,card,context)
+        if context.main_scoring and context.cardarea == G.hand then
+            return { x_mult = card.ability.extra.mult, x_chips = card.ability.extra.chips}
+        end
+    end
 }
